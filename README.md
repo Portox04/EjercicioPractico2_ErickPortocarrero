@@ -1,1 +1,1 @@
-# EjercicioPrac-co2_ErickPortocarrero
+# EjercicioPractico2_ErickPortocarrero
