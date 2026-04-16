@@ -103,7 +103,7 @@ public class UsuarioService {
 
 
         if (esNuevo) {
-            asignarRol(usuario, "USER");
+            asignarRol(usuario, "CLIENTE");
         }
     }
 

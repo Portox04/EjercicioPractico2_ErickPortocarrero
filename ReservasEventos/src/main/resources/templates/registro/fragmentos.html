@@ -3,13 +3,18 @@
 
     <body>
 
-        <!-- NUEVO -->
+        <!-- ===================== NUEVO USUARIO ===================== -->
         <section th:fragment="nuevoUsuario">
+
             <div class="container mt-5">
                 <div class="row justify-content-center">
+
                     <div class="col-md-4">
 
-                        <form method="POST" th:action="@{/registro/crearUsuario}" th:object="${usuario}">
+                        <form method="POST"
+                              th:action="@{/registro/crearUsuario}"
+                              th:object="${usuario}">
+
                             <div class="card">
 
                                 <div class="card-header">
@@ -18,10 +23,18 @@
 
                                 <div class="card-body">
 
-                                    <input class="form-control mb-2" th:field="*{username}" placeholder="Usuario"/>
-                                    <input class="form-control mb-2" th:field="*{nombre}" placeholder="Nombre"/>
-                                    <input class="form-control mb-2" th:field="*{apellidos}" placeholder="Apellidos"/>
-                                    <input class="form-control mb-2" th:field="*{correo}" placeholder="Correo"/>
+                                    <input class="form-control mb-2"
+                                           th:field="*{nombreCompleto}"
+                                           placeholder="Nombre completo"/>
+
+                                    <input class="form-control mb-2"
+                                           th:field="*{correoElectronico}"
+                                           placeholder="Correo"/>
+
+                                    <input class="form-control mb-2"
+                                           type="password"
+                                           th:field="*{password}"
+                                           placeholder="Contraseña"/>
 
                                 </div>
 
@@ -30,45 +43,68 @@
                                 </div>
 
                             </div>
+
                         </form>
 
                     </div>
+
                 </div>
             </div>
+
         </section>
 
-        <!-- ACTIVAR -->
+        <!-- ===================== ACTIVAR ===================== -->
         <section th:fragment="activarUsuario">
+
             <div class="container mt-5 text-center">
+
                 <h3>Activar Usuario</h3>
 
-                <form method="POST" th:action="@{/registro/activar}" th:object="${usuario}">
+                <form method="POST"
+                      th:action="@{/registro/activar}"
+                      th:object="${usuario}">
+
                     <input type="hidden" th:field="*{idUsuario}"/>
 
-                    <input class="form-control mb-2" th:field="*{password}" placeholder="Nueva contraseña"/>
+                    <input class="form-control mb-2"
+                           type="password"
+                           th:field="*{password}"
+                           placeholder="Nueva contraseña"/>
 
                     <button class="btn btn-success">Activar</button>
                 </form>
+
             </div>
+
         </section>
 
-        <!-- RECORDAR -->
+        <!-- ===================== RECORDAR ===================== -->
         <section th:fragment="recordarUsuario">
+
             <div class="container mt-5 text-center">
 
-                <form method="POST" th:action="@{/registro/recordarUsuario}" th:object="${usuario}">
-                    <input class="form-control mb-2" th:field="*{correo}" placeholder="Correo"/>
+                <form method="POST"
+                      th:action="@{/registro/recordarUsuario}"
+                      th:object="${usuario}">
+
+                    <input class="form-control mb-2"
+                           th:field="*{correoElectronico}"
+                           placeholder="Correo"/>
+
                     <button class="btn btn-primary">Recordar</button>
                 </form>
 
             </div>
+
         </section>
 
-        <!-- SALIDA -->
+        <!-- ===================== MENSAJE ===================== -->
         <section th:fragment="salidaRegistro">
+
             <div class="container mt-5 text-center">
                 <h4 th:text="${mensaje}"></h4>
             </div>
+
         </section>
 
     </body>

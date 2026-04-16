@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-    <head th:replace="~{general/fragmentos :: head}"/>
+    <head th:replace="~{general/fragmentos :: head}"></head>
 
     <body>
 
-        <header th:replace="~{general/fragmentos :: header}"/>
+        <!-- HEADER -->
+        <header th:replace="~{general/fragmentos :: header}"></header>
 
+        <!-- CONTENIDO -->
         <div class="container mt-4 text-center">
 
             <h1>Bienvenido al Sistema de Reservas</h1>
@@ -14,11 +16,19 @@
 
         </div>
 
-        <!-- CONSULTAS -->
-        <section th:replace="~{consultas/fragmentos :: tabs}"/>
-        <section th:replace="~{consultas/fragmentos :: tarjetas}"/>
+        <!-- BANNER -->
+        <div class="container mt-4">
+            <img src="https://s.ineventos.com/pages/2021/2/015125-1080w.jpg"
+                 class="img-fluid rounded shadow"
+                 style="width: 100%; max-height: 400px; object-fit: cover;">
+        </div>
 
-        <footer th:replace="~{general/fragmentos :: footer}"/>
+        <!-- CONSULTAS -->
+        <section th:replace="~{consultas/fragmentos :: tabs}"></section>
+        <section th:replace="~{consultas/fragmentos :: tarjetas}"></section>
+
+        <!-- FOOTER -->
+        <footer th:replace="~{general/fragmentos :: footer}"></footer>
 
     </body>
 </html>

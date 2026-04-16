@@ -8,18 +8,15 @@ package com.Reservas_Eventos;
  *
  * @author porto
  */
-import com.Reservas_Eventos.domain.Usuario;
-import com.Reservas_Eventos.repository.UsuarioRepository;
 import com.Reservas_Eventos.service.UsuarioDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-
 
 @Configuration
 @EnableWebSecurity
@@ -33,21 +30,24 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        // ⚡ CAMBIO RÁPIDO: SIN BCrypt (solo para desarrollo)
+        return NoOpPasswordEncoder.getInstance();
     }
 
     @Bean
     public AuthenticationSuccessHandler successHandler() {
         return (request, response, authentication) -> {
+
             boolean esAdmin = authentication.getAuthorities().stream()
                     .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
             boolean esOrganizador = authentication.getAuthorities().stream()
                     .anyMatch(a -> a.getAuthority().equals("ROLE_ORGANIZADOR"));
 
             if (esAdmin) {
-                response.sendRedirect("/usuarios/listado");
+                response.sendRedirect("/");
             } else if (esOrganizador) {
-                response.sendRedirect("/eventos/listado");
+                response.sendRedirect("/");
             } else {
                 response.sendRedirect("/");
             }
@@ -58,7 +58,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/registro/**", "/recuperar/**", "/css/**", "/js/**", "/webjars/**").permitAll()
+                .requestMatchers("/login", "/registro/**", "/recuperar/**",
+                        "/css/**", "/js/**", "/webjars/**").permitAll()
                 .requestMatchers("/usuarios/**", "/roles/**").hasRole("ADMIN")
                 .requestMatchers("/eventos/guardar", "/eventos/eliminar", "/eventos/editar/**")
                 .hasAnyRole("ADMIN", "ORGANIZADOR")
@@ -68,7 +69,7 @@ public class SecurityConfig {
                 .hasAnyRole("ADMIN", "ORGANIZADOR")
                 .anyRequest().authenticated()
                 )
-                .userDetailsService(usuarioDetailsService) // 👈 IMPORTANTE
+                .userDetailsService(usuarioDetailsService)
                 .formLogin(form -> form
                 .loginPage("/login")
                 .successHandler(successHandler())

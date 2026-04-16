@@ -1,23 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.Reservas_Eventos.service;
-
-/**
- *
- * @author porto
- */
 
 import com.Reservas_Eventos.domain.Usuario;
 import jakarta.mail.MessagingException;
-import java.util.Locale;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
-import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Service;
-
 import org.springframework.ui.Model;
 
 @Service
@@ -25,14 +11,11 @@ public class RegistroService {
 
     private final CorreoService correoService;
     private final UsuarioService usuarioService;
-    private final MessageSource messageSource;
 
     public RegistroService(CorreoService correoService,
-            UsuarioService usuarioService,
-            MessageSource messageSource) {
+                           UsuarioService usuarioService) {
         this.correoService = correoService;
         this.usuarioService = usuarioService;
-        this.messageSource = messageSource;
     }
 
     // =========================
@@ -40,16 +23,14 @@ public class RegistroService {
     // =========================
     public Model activar(Model model, String correoElectronico, String clave) {
 
-        Optional<Usuario> usuario
-                = usuarioService.getUsuarioPorCorreoYPassword(correoElectronico, clave);
+        Optional<Usuario> usuario =
+                usuarioService.getUsuarioPorCorreoYPassword(correoElectronico, clave);
 
         if (usuario.isPresent()) {
             model.addAttribute("usuario", usuario.get());
         } else {
-            model.addAttribute("titulo",
-                    messageSource.getMessage("registro.activar", null, Locale.getDefault()));
-            model.addAttribute("mensaje",
-                    messageSource.getMessage("registro.activar.error", null, Locale.getDefault()));
+            model.addAttribute("titulo", "Activación de cuenta");
+            model.addAttribute("mensaje", "Código o usuario inválido para activación");
         }
 
         return model;
@@ -80,21 +61,16 @@ public class RegistroService {
 
             enviaCorreoActivar(usuario, clave);
 
-            mensaje = String.format(
-                    messageSource.getMessage("registro.mensaje.activacion.ok", null, Locale.getDefault()),
-                    usuario.getCorreoElectronico()
-            );
+            mensaje = "Usuario registrado correctamente. Revisa tu correo: "
+                    + usuario.getCorreoElectronico();
 
-        } catch (MessagingException | NoSuchMessageException e) {
+        } catch (Exception e) {
 
-            mensaje = String.format(
-                    messageSource.getMessage("registro.mensaje.usuario.o.correo", null, Locale.getDefault()),
-                    usuario.getCorreoElectronico()
-            );
+            mensaje = "Error: el usuario o correo ya existe: "
+                    + usuario.getCorreoElectronico();
         }
 
-        model.addAttribute("titulo",
-                messageSource.getMessage("registro.activar", null, Locale.getDefault()));
+        model.addAttribute("titulo", "Activación de cuenta");
         model.addAttribute("mensaje", mensaje);
 
         return model;
@@ -107,8 +83,8 @@ public class RegistroService {
 
         String mensaje;
 
-        Optional<Usuario> usuarioOpt
-                = usuarioService.getUsuarioPorCorreo(usuario.getCorreoElectronico());
+        Optional<Usuario> usuarioOpt =
+                usuarioService.getUsuarioPorCorreo(usuario.getCorreoElectronico());
 
         if (usuarioOpt.isPresent()) {
 
@@ -123,20 +99,16 @@ public class RegistroService {
 
             enviaCorreoRecordar(usuario, clave);
 
-            mensaje = String.format(
-                    messageSource.getMessage("registro.mensaje.recordar.ok", null, Locale.getDefault()),
-                    usuario.getCorreoElectronico()
-            );
+            mensaje = "Se envió una nueva contraseña al correo: "
+                    + usuario.getCorreoElectronico();
 
         } else {
-            mensaje = String.format(
-                    messageSource.getMessage("registro.mensaje.usuario.o.correo", null, Locale.getDefault()),
-                    usuario.getCorreoElectronico()
-            );
+
+            mensaje = "No existe un usuario con ese correo: "
+                    + usuario.getCorreoElectronico();
         }
 
-        model.addAttribute("titulo",
-                messageSource.getMessage("registro.activar", null, Locale.getDefault()));
+        model.addAttribute("titulo", "Recordar usuario");
         model.addAttribute("mensaje", mensaje);
 
         return model;
@@ -156,25 +128,30 @@ public class RegistroService {
         return clave.toString();
     }
 
-    @Value("${servidor.http}")
-    private String servidor;
+    // servidor
+    private String servidor = "http://localhost:8080";
 
     // =========================
     // CORREO ACTIVACIÓN
     // =========================
     private void enviaCorreoActivar(Usuario usuario, String clave) throws MessagingException {
 
-        String mensaje = messageSource.getMessage("registro.correo.activar", null, Locale.getDefault());
-
-        mensaje = String.format(
-                mensaje,
+        String mensaje = """
+                Hola %s,
+                
+                Para activar tu cuenta ingresa a:
+                %s/registro/activar
+                
+                Usuario: %s
+                Clave: %s
+                """.formatted(
                 usuario.getNombreCompleto(),
                 servidor,
                 usuario.getCorreoElectronico(),
                 clave
         );
 
-        String asunto = messageSource.getMessage("registro.mensaje.activacion", null, Locale.getDefault());
+        String asunto = "Activación de cuenta";
 
         correoService.enviarCorreoHtml(usuario.getCorreoElectronico(), asunto, mensaje);
     }
@@ -184,17 +161,20 @@ public class RegistroService {
     // =========================
     private void enviaCorreoRecordar(Usuario usuario, String clave) throws MessagingException {
 
-        String mensaje = messageSource.getMessage("registro.correo.recordar", null, Locale.getDefault());
-
-        mensaje = String.format(
-                mensaje,
+        String mensaje = """
+                Hola %s,
+                
+                Tu nueva contraseña es:
+                %s
+                
+                Usuario: %s
+                """.formatted(
                 usuario.getNombreCompleto(),
-                servidor,
-                usuario.getCorreoElectronico(),
-                clave
+                clave,
+                usuario.getCorreoElectronico()
         );
 
-        String asunto = messageSource.getMessage("registro.mensaje.recordar", null, Locale.getDefault());
+        String asunto = "Recuperación de cuenta";
 
         correoService.enviarCorreoHtml(usuario.getCorreoElectronico(), asunto, mensaje);
     }
