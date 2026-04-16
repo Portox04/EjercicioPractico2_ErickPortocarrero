@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+
+    <body>
+
+        <!-- ========================= -->
+        <!-- AGREGAR USUARIO -->
+        <!-- ========================= -->
+        <section th:fragment="agregar">
+
+            <div class="row py-4 mb-2 bg-light">
+                <div class="col-md-3">
+
+                    <button type="button"
+                            class="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#agregarUsuarioModal">
+
+                        <i class="fa-solid fa-plus"></i> Agregar Usuario
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- MODAL AGREGAR -->
+            <div class="modal fade" id="agregarUsuarioModal" tabindex="-1">
+
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header bg-info text-white">
+                            <h5 class="modal-title">Agregar Usuario</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <form th:action="@{/usuario/guardar}" method="post">
+
+                            <div class="modal-body">
+
+                                <input type="text" name="nombreCompleto"
+                                       class="form-control mb-2"
+                                       placeholder="Nombre completo" required/>
+
+                                <input type="email" name="correoElectronico"
+                                       class="form-control mb-2"
+                                       placeholder="Correo" required/>
+
+                                <input type="password" name="password"
+                                       class="form-control mb-2"
+                                       placeholder="Password"/>
+
+                                <select name="rolAsignado.idRol"
+                                        class="form-control"
+                                        required>
+
+                                    <option value="">Seleccione rol</option>
+
+                                    <option th:each="r : ${roles}"
+                                            th:value="${r.idRol}"
+                                            th:text="${r.nombreRol}">
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    Cerrar
+                                </button>
+
+                                <button type="submit" class="btn btn-primary">
+                                    Guardar
+                                </button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ========================= -->
+        <!-- LISTADO -->
+        <!-- ========================= -->
+        <section th:fragment="listado">
+
+            <table class="table">
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr th:each="u : ${usuarios}">
+
+                        <td th:text="${u.idUsuario}"></td>
+                        <td th:text="${u.nombreCompleto}"></td>
+                        <td th:text="${u.correoElectronico}"></td>
+
+                        <td th:text="${u.rolAsignado != null ? u.rolAsignado.nombreRol : 'Sin rol'}"></td>
+
+                        <td th:text="${u.cuentaActiva ? 'Activo' : 'Inactivo'}"></td>
+
+                        <td>
+
+                            <!-- EDITAR -->
+                            <a th:href="@{/usuario/modificar/{id}(id=${u.idUsuario})}"
+                               class="btn btn-primary btn-sm">
+                                Editar
+                            </a>
+
+                            <button type="button"
+                                    class="btn btn-danger btn-sm eliminar-btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#confirmModal"
+                                    th:attr="data-id=${u.idUsuario}, data-nombre=${u.nombreCompleto}">
+                                Eliminar
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+        <!-- ========================= -->
+        <!-- MODAL ELIMINAR -->
+        <!-- ========================= -->
+        <section th:fragment="confirmarEliminar">
+
+            <div class="modal fade" id="confirmModal" tabindex="-1">
+
+                <div class="modal-dialog modal-dialog-centered">
+
+                    <div class="modal-content">
+
+                        <form th:action="@{/usuario/eliminar}" method="post">
+
+                            <input type="hidden" name="idUsuario" id="modalId"/>
+
+                            <div class="modal-header bg-warning">
+                                <h5 class="modal-title">Confirmar eliminación</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <div class="modal-body text-center">
+                                <p>¿Deseas eliminar este usuario?</p>
+                                <p class="fw-bold" id="modalNombre"></p>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    Cancelar
+                                </button>
+
+                                <button type="submit" class="btn btn-danger">
+                                    Eliminar
+                                </button>
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ========================= -->
+        <!-- SCRIPT SEGURO -->
+        <!-- ========================= -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+
+                const modal = document.getElementById('confirmModal');
+
+                modal.addEventListener('show.bs.modal', function (event) {
+
+                    const button = event.relatedTarget;
+
+                    const id = button.getAttribute('data-id');
+                    const nombre = button.getAttribute('data-nombre');
+
+                    document.getElementById('modalId').value = id || '';
+                    document.getElementById('modalNombre').textContent = nombre || '';
+
+                });
+
+            });
+        </script>
+
+    </body>
+</html>

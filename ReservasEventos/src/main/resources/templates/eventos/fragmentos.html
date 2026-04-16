@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <body>
+
+        <!-- ========================= -->
+        <!-- AGREGAR EVENTO -->
+        <!-- ========================= -->
+        <section th:fragment="agregar">
+
+            <div class="row py-4 mb-2 bg-light">
+                <div class="col-md-3">
+
+                    <button type="button"
+                            class="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#agregarEventoModal">
+
+                        + Agregar Evento
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- MODAL AGREGAR -->
+            <div class="modal fade" id="agregarEventoModal" tabindex="-1">
+
+                <div class="modal-dialog">
+
+                    <div class="modal-content">
+
+                        <div class="modal-header bg-info text-white">
+                            <h5 class="modal-title">Agregar Evento</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <form th:action="@{/eventos/guardar}" method="post">
+
+                            <div class="modal-body">
+
+                                <input type="text"
+                                       name="nombreEvento"
+                                       class="form-control mb-2"
+                                       placeholder="Nombre del evento"
+                                       required/>
+
+                                <textarea name="descripcionEvento"
+                                          class="form-control mb-2"
+                                          placeholder="Descripción"></textarea>
+
+                                <input type="date"
+                                       name="fechaEvento"
+                                       class="form-control mb-2"
+                                       required/>
+
+                                <input type="number"
+                                       name="capacidadMaxima"
+                                       class="form-control mb-2"
+                                       placeholder="Capacidad mínima 1"
+                                       min="1"
+                                       required/>
+
+                                <select name="eventoActivo"
+                                        class="form-control mb-2">
+
+                                    <option value="true">Activo</option>
+                                    <option value="false">Inactivo</option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="modal-footer">
+
+                                <button type="button"
+                                        class="btn btn-secondary"
+                                        data-bs-dismiss="modal">
+                                    Cerrar
+                                </button>
+
+                                <button type="submit"
+                                        class="btn btn-primary">
+                                    Guardar
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ========================= -->
+        <!-- LISTADO EVENTOS -->
+        <!-- ========================= -->
+        <section th:fragment="listado">
+
+            <table class="table table-striped table-hover">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Fecha</th>
+                        <th>Capacidad</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr th:each="e : ${eventos}">
+
+                        <td th:text="${e.idEvento}"></td>
+                        <td th:text="${e.nombreEvento}"></td>
+                        <td th:text="${e.fechaEvento}"></td>
+                        <td th:text="${e.capacidadMaxima}"></td>
+
+                        <td th:text="${e.eventoActivo ? 'Activo' : 'Inactivo'}"></td>
+
+                        <td class="text-nowrap">
+
+                            <!-- MODIFICAR -->
+                            <a th:href="@{/eventos/modifica/{id}(id=${e.idEvento})}"
+                               class="btn btn-sm btn-primary">
+                                Editar
+                            </a>
+
+                            <!-- ELIMINAR -->
+                            <button type="button"
+                                    class="btn btn-sm btn-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#confirmModal"
+                                    th:attr="data-id=${e.idEvento}, data-nombre=${e.nombreEvento}">
+                                Eliminar
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+        <!-- ========================= -->
+        <!-- MODAL ELIMINAR -->
+        <!-- ========================= -->
+        <section th:fragment="confirmarEliminar">
+
+            <div class="modal fade" id="confirmModal" tabindex="-1">
+
+                <div class="modal-dialog modal-dialog-centered">
+
+                    <div class="modal-content">
+
+                        <form th:action="@{/eventos/eliminar}" method="post">
+
+                            <input type="hidden" name="id" id="modalId"/>
+
+                            <div class="modal-header bg-warning">
+                                <h5 class="modal-title">Eliminar Evento</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <div class="modal-body text-center">
+
+                                <p>¿Deseas eliminar este evento?</p>
+
+                                <p class="fw-bold" id="modalEventoNombre"></p>
+
+                            </div>
+
+                            <div class="modal-footer">
+
+                                <button type="button"
+                                        class="btn btn-secondary"
+                                        data-bs-dismiss="modal">
+                                    Cancelar
+                                </button>
+
+                                <button type="submit"
+                                        class="btn btn-danger">
+                                    Eliminar
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ========================= -->
+        <!-- JS MODAL -->
+        <!-- ========================= -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+
+                const modal = document.getElementById('confirmModal');
+
+                modal.addEventListener('show.bs.modal', function (event) {
+
+                    const button = event.relatedTarget;
+
+                    const id = button.getAttribute('data-id');
+                    const nombre = button.getAttribute('data-nombre');
+
+                    console.log("ID:", id);
+                    console.log("Nombre:", nombre);
+
+                    document.getElementById('modalId').value = id;
+                    document.getElementById('modalEventoNombre').textContent = nombre;
+                });
+
+            });
+        </script>
+
+    </body>
+</html>

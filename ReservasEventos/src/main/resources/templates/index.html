@@ -5,10 +5,10 @@
 
     <body>
 
-        <!-- HEADER -->
+        <!-- ================= HEADER ================= -->
         <header th:replace="~{general/fragmentos :: header}"></header>
 
-        <!-- CONTENIDO -->
+        <!-- ================= INTRO ================= -->
         <div class="container mt-4 text-center">
 
             <h1>Bienvenido al Sistema de Reservas</h1>
@@ -16,18 +16,67 @@
 
         </div>
 
-        <!-- BANNER -->
+        <!-- ================= BANNER ================= -->
         <div class="container mt-4">
             <img src="https://s.ineventos.com/pages/2021/2/015125-1080w.jpg"
                  class="img-fluid rounded shadow"
                  style="width: 100%; max-height: 400px; object-fit: cover;">
         </div>
 
-        <!-- CONSULTAS -->
-        <section th:replace="~{consultas/fragmentos :: tabs}"></section>
-        <section th:replace="~{consultas/fragmentos :: tarjetas}"></section>
+        <!-- ================= CONSULTAS EVENTOS ================= -->
+        <section class="container mt-5">
 
-        <!-- FOOTER -->
+            <h3 class="text-center mb-4">Consultas de Eventos</h3>
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Eventos activos</h5>
+                            <p class="card-text">Consulta eventos disponibles.</p>
+                            <a th:href="@{/consultas/eventos}" class="btn btn-primary">
+                                Ver eventos
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Eventos por fecha</h5>
+                            <p class="card-text">Filtra eventos por fechas.</p>
+                            <a th:href="@{/consultas/eventos-fecha}" class="btn btn-success">
+                                Consultar
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Capacidad de eventos</h5>
+                            <p class="card-text">Filtra por capacidad disponible.</p>
+                            <a th:href="@{/consultas/eventos-capacidad}" class="btn btn-warning">
+                                Ver
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ================= FOOTER ================= -->
         <footer th:replace="~{general/fragmentos :: footer}"></footer>
 
     </body>

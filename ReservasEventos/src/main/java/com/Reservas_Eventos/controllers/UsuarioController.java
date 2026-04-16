@@ -9,9 +9,11 @@ package com.Reservas_Eventos.controllers;
  * @author porto
  */
 import com.Reservas_Eventos.domain.Usuario;
+import com.Reservas_Eventos.service.RolService;
 import com.Reservas_Eventos.service.UsuarioService;
 import jakarta.validation.Valid;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,12 +30,15 @@ public class UsuarioController {
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
+    @Autowired
+    private RolService rolService;
 
     @GetMapping("/listado")
     public String inicio(Model model) {
         var usuarios = usuarioService.getUsuarios(false);
         model.addAttribute("usuarios", usuarios);
         model.addAttribute("totalUsuarios", usuarios.size());
+        model.addAttribute("roles", rolService.getRoles());
         return "usuario/listado";
     }
 
@@ -96,9 +101,10 @@ public class UsuarioController {
         }
 
         Usuario usuario = usuarioOpt.get();
-        usuario.setPassword(""); 
+        usuario.setPassword("");
 
         model.addAttribute("usuario", usuario);
+        model.addAttribute("roles", rolService.getRoles());
 
         return "usuario/modifica";
     }

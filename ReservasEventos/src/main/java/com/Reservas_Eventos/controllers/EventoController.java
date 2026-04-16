@@ -39,7 +39,7 @@ public class EventoController {
         model.addAttribute("eventos", eventos);
         model.addAttribute("totalEventos", eventos.size());
         model.addAttribute("evento", new Evento());
-        return "/eventos/listado";
+        return "eventos/listado";
     }
 
     @PostMapping("/guardar")
@@ -49,7 +49,7 @@ public class EventoController {
                           Model model) {
 
         if (errors.hasErrors()) {
-            return "/eventos/listado";
+            return "eventos/listado";
         }
 
         try {
@@ -83,7 +83,7 @@ public class EventoController {
         return "redirect:/eventos/listado";
     }
 
-    @GetMapping("/modificar/{id}")
+    @GetMapping("/modifica/{id}")
     public String modificar(@PathVariable Long id,
                             Model model,
                             RedirectAttributes redirectAttributes) {
@@ -97,6 +97,6 @@ public class EventoController {
 
         model.addAttribute("evento", eventoOpt.get());
 
-        return "/eventos/modifica";
+        return "eventos/modifica";
     }
 }
