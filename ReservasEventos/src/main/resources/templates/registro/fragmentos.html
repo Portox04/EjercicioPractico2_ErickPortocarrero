@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <body>
+
+        <!-- NUEVO -->
+        <section th:fragment="nuevoUsuario">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-4">
+
+                        <form method="POST" th:action="@{/registro/crearUsuario}" th:object="${usuario}">
+                            <div class="card">
+
+                                <div class="card-header">
+                                    <h4>Registro</h4>
+                                </div>
+
+                                <div class="card-body">
+
+                                    <input class="form-control mb-2" th:field="*{username}" placeholder="Usuario"/>
+                                    <input class="form-control mb-2" th:field="*{nombre}" placeholder="Nombre"/>
+                                    <input class="form-control mb-2" th:field="*{apellidos}" placeholder="Apellidos"/>
+                                    <input class="form-control mb-2" th:field="*{correo}" placeholder="Correo"/>
+
+                                </div>
+
+                                <div class="card-footer text-end">
+                                    <button class="btn btn-success">Registrarse</button>
+                                </div>
+
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ACTIVAR -->
+        <section th:fragment="activarUsuario">
+            <div class="container mt-5 text-center">
+                <h3>Activar Usuario</h3>
+
+                <form method="POST" th:action="@{/registro/activar}" th:object="${usuario}">
+                    <input type="hidden" th:field="*{idUsuario}"/>
+
+                    <input class="form-control mb-2" th:field="*{password}" placeholder="Nueva contraseña"/>
+
+                    <button class="btn btn-success">Activar</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- RECORDAR -->
+        <section th:fragment="recordarUsuario">
+            <div class="container mt-5 text-center">
+
+                <form method="POST" th:action="@{/registro/recordarUsuario}" th:object="${usuario}">
+                    <input class="form-control mb-2" th:field="*{correo}" placeholder="Correo"/>
+                    <button class="btn btn-primary">Recordar</button>
+                </form>
+
+            </div>
+        </section>
+
+        <!-- SALIDA -->
+        <section th:fragment="salidaRegistro">
+            <div class="container mt-5 text-center">
+                <h4 th:text="${mensaje}"></h4>
+            </div>
+        </section>
+
+    </body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head th:replace="~{general/fragmentos :: head}"/>
+
+    <body>
+
+        <header th:replace="~{general/fragmentos :: header}"/>
+
+        <div class="container mt-4 text-center">
+
+            <h1>Bienvenido al Sistema de Reservas</h1>
+            <p>Gestiona usuarios y eventos fácilmente</p>
+
+        </div>
+
+        <!-- CONSULTAS -->
+        <section th:replace="~{consultas/fragmentos :: tabs}"/>
+        <section th:replace="~{consultas/fragmentos :: tarjetas}"/>
+
+        <footer th:replace="~{general/fragmentos :: footer}"/>
+
+    </body>
+</html>

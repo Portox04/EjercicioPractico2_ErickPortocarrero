@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <body>
+
+        <section th:fragment="tabs">
+            <div class="container mt-4 text-center">
+                <h4>Consultas</h4>
+            </div>
+        </section>
+
+        <section th:fragment="tarjetas">
+            <div class="container mt-3">
+
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="card p-3 text-center">
+                            <h5>Usuarios</h5>
+                            <a th:href="@{/consultas/usuarios}" class="btn btn-primary">
+                                Ver Usuarios
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </body>
+</html>

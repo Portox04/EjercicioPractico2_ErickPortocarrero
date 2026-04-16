@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+    <head th:fragment="head">
+        <meta charset="UTF-8"/>
+        <title>Reservas Eventos</title>
+
+        <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+        <link th:href="@{/webjars/font-awesome/css/all.css}" rel="stylesheet"/>
+
+        <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+        <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+        <link th:href="@{/css/estilos.css}" rel="stylesheet"/>
+    </head>
+
+    <body>
+
+        <header th:fragment="header">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container">
+
+                    <a class="navbar-brand" th:href="@{/}">
+                        ReservasEventos
+                    </a>
+
+                    <div class="collapse navbar-collapse">
+
+                        <ul class="navbar-nav me-auto">
+
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/}">Inicio</a>
+                            </li>
+
+                            <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                                <a class="nav-link" th:href="@{/usuario/listado}">Usuarios</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/consultas/usuarios}">
+                                    Consultas
+                                </a>
+                            </li>
+
+                        </ul>
+
+                        <!-- LOGIN -->
+                        <ul class="navbar-nav" sec:authorize="!isAuthenticated()">
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/login}">
+                                    Login
+                                </a>
+                            </li>
+                        </ul>
+
+                        <!-- USUARIO -->
+                        <ul class="navbar-nav" sec:authorize="isAuthenticated()">
+
+                            <li class="nav-item">
+                                <span class="nav-link" sec:authentication="name"></span>
+                            </li>
+
+                            <li class="nav-item">
+                                <form th:action="@{/logout}" method="post">
+                                    <button class="btn btn-link nav-link">Logout</button>
+                                </form>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <footer th:fragment="footer" class="bg-dark text-white text-center p-3 mt-5">
+            <p>© Sistema de Reservas</p>
+        </footer>
+
+    </body>
+</html>
